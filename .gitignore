@@ -1,0 +1,9 @@
+__pycache__
+push.bat
+*.zip
+*.lnk
+data
+hconfig.ini
+web_mail/*.lnk
+web_mail/data
+web_mail/hconfig.ini
