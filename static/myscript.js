@@ -29,7 +29,22 @@ function includeHTML() {
     }
   }
 }
-
+function reloadUrl() {
+  location.reload();
+}
+function httpGet(theUrl, authorization = "") {
+  var xmlHttp = new XMLHttpRequest();
+  xmlHttp.open("GET", theUrl, false); // false for synchronous request
+  if (authorization != "") {
+    xmlHttp.setRequestHeader("Authorization", authorization);
+  }
+  xmlHttp.send(null);
+  return xmlHttp.responseText;
+}
+function httpGetJson(theUrl, authorization = "") {
+  var html = httpGet(theUrl, authorization);
+  return JSON.parse(html);
+}
 function CopyTextareaToClipboard(idtextarea) {
   let textarea = document.getElementById(idtextarea);
   textarea.select();
@@ -179,6 +194,11 @@ function downloadFileCu(filename, content) {
   document.body.appendChild(link);
   link.click();
 }
+function getSelectedCombo(id) {
+  var e = document.getElementById(id);
+  var strUser = e.options[e.selectedIndex].text;
+  return strUser;
+}
 function openDataNewTab(result) {
   result = result.replace("\n", "<br>");
   result = result.replace("\r", "<br>");
@@ -186,6 +206,9 @@ function openDataNewTab(result) {
   myWindow.document.write(result);
 }
 function Sleep(ms) {
+  return new Promise((r) => setTimeout(r, ms));
+}
+function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
 }
 includeHTML();
