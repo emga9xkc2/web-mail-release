@@ -45,6 +45,21 @@ function httpGetJson(theUrl, authorization = "") {
   var html = httpGet(theUrl, authorization);
   return JSON.parse(html);
 }
+function httpPost(theUrl, data, authorization = "") {
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", theUrl, true);
+  if (authorization != "") {
+    xhr.setRequestHeader("Authorization", authorization);
+  }
+  xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.send(JSON.stringify(data));
+  return xhr.responseText;
+}
+function httpPostReturnJson(theUrl, data, authorization = "") {
+  var html = httpPost(theUrl, data, authorization);
+  console.log("_______" + html);
+  return JSON.parse(html);
+}
 function CopyTextareaToClipboard(idtextarea) {
   let textarea = document.getElementById(idtextarea);
   textarea.select();
@@ -169,6 +184,10 @@ function getTime() {
     ":" +
     currentdate.getSeconds();
   return datetime;
+}
+function splitLines(subject) {
+  var result = subject.split(/\r?\n/);
+  return result;
 }
 function downloadFile(filename, text) {
   var element = document.createElement("a");
