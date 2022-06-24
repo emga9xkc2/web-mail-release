@@ -277,9 +277,12 @@
         });
       });
       function loadData() {
+        $('#input').val("Đang lấy dữ liệu cũ")
         var json = httpGetJson("tudongchaylai", "Bearer " + window.localStorage.token)
         if (json.mess == "success") {
           $('#input').val(json.data)
+        } else {
+          $('#input').val("Lấy dữ liệu cũ bị lỗi")
         }
 
         // console.log(data)
