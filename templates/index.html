@@ -490,6 +490,7 @@
             }
             $("#groups").html(stringToRender);
             getDateByGroups();
+
           },
           error: function (results) {
             window.location.href = "login.html"
@@ -683,9 +684,10 @@
               // console.log(onePost["id"])
               var tr = `<tr id="${onePost.id}"><td>${x}</td>`
               for (let z = 1; z < showTable.length; z++) {
-                tr = tr + `<td><input type="text" style="width:100%;" value="${onePost[showTable[z]]}"></td>`
+                var tencot = showTable[z]
+                tr = tr + `<td><input id="${tencot}_${onePost.id}" onkeypress='UpdateEnter(event, "${onePost.id}", "${tencot}");' type="text" style="width:100%;" value="${onePost[showTable[z]]}"></td>`
               }
-              tr = tr + `<td><a nohref style='cursor:pointer;color:blue;text-decoration:underline' onClick='Del("${onePost.id}");'>Xóa</a> | <a nohref style='cursor:pointer;color:blue;text-decoration:underline' onClick='Update("${onePost.id}");'>Update</a></td></tr>`
+              tr = tr + `<td><a nohref style='cursor:pointer;color:blue;text-decoration:underline' onClick='Del("${onePost.id}");'>Xóa</a></td></tr>`
               stringToRender = stringToRender + tr
             }
             let tileveri = Math.ceil(verify / x * 100)
@@ -759,9 +761,10 @@
               // console.log(onePost["id"])
               var tr = `<tr id="${onePost.id}"><td>${x}</td>`
               for (let z = 1; z < showTable.length; z++) {
-                tr = tr + `<td><input type="text" style="width:100%;" value="${onePost[showTable[z]]}"></td>`
+                var tencot = showTable[z]
+                tr = tr + `<td><input id="${tencot}_${onePost.id}" onkeypress='UpdateEnter(event, "${onePost.id}", "${tencot}");' type="text" style="width:100%;" value="${onePost[showTable[z]]}"></td>`
               }
-              tr = tr + `<td><a nohref style='cursor:pointer;color:blue;text-decoration:underline' onClick='Del("${onePost.id}");'>Xóa</a> | <a nohref style='cursor:pointer;color:blue;text-decoration:underline' onClick='Update("${onePost.id}");'>Update</a></td></tr>`
+              tr = tr + `<td><a nohref style='cursor:pointer;color:blue;text-decoration:underline' onClick='Del("${onePost.id}");'>Xóa</a></td></tr>`
               stringToRender = stringToRender + tr
             }
             let tileveri = Math.ceil(verify / x * 100)
@@ -890,25 +893,22 @@
           }
         });
       }
-      function UpdateEnter(e, id) {
+      function UpdateEnter(e, id, column) {
         if (e.keyCode == 13) {
-          Update(id)
+          Update(id, column)
           return
         }
       }
-      function Update(id) {
-        var r = confirm("Xác nhận update!");
+      function Update(id, column) {
+        var r = confirm("Xác nhận update! " + column);
         if (r !== true) {
           return
         }
-        var select = document.querySelectorAll('tr[id="' + id + '"] > td')
-
-        var person = {
-          email: select[1].childNodes[0].value,
-          password: select[2].childNodes[0].value,
-          emailrecovery: select[3].childNodes[0].value,
-          status: select[4].childNodes[0].value,
-          datecreate: select[9].childNodes[0].value,
+        var idInput = column + "_" + id
+        var querySelector = document.querySelector('#' + idInput)
+        var value = querySelector.value;
+        var data = {
+          [column]: value,
         }
         $.ajax({
           url: "/mailedit/" + id,
@@ -917,7 +917,7 @@
           beforeSend: function (request) {
             request.setRequestHeader("Authorization", "Bearer " + window.localStorage.token);
           },
-          data: JSON.stringify(person),
+          data: JSON.stringify(data),
           contentType: 'application/json',
           success: function (result) {
 
