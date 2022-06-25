@@ -41,6 +41,9 @@ function httpGet(theUrl, authorization = "") {
   xmlHttp.send(null);
   return xmlHttp.responseText;
 }
+function setHtmlCssSelector(cssSelector, html) {
+  $(cssSelector).html(html);
+}
 function httpGetJson(theUrl, authorization = "") {
   var html = httpGet(theUrl, authorization);
   return JSON.parse(html);

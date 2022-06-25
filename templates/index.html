@@ -325,27 +325,8 @@
                 <div class="yoo-height-b20 yoo-height-lg-b20"></div>
                 <table class="table table-bordered">
                   <thead>
-                    <tr>
-                      <th scope="col" width="2%">#</th>
-                      <th scope="col" width="5%">email</th>
-                      <th scope="col" width="5%">password</th>
-                      <th scope="col" width="5%">emailrecovery</th>
-                      <th scope="col" width="5%">status</th>
-                      <th scope="col" width="5%">youtube</th>
-                      <th scope="col" width="5%">birthday</th>
-                      <th scope="col" width="5%">phonerecovery</th>
-                      <th scope="col" width="5%">country</th>
-                      <th scope="col" width="5%">googleadw</th>
-                      <th scope="col" width="5%">googleadsense</th>
-                      <th scope="col" width="5%">chplay</th>
-                      <th scope="col" width="5%">paymentmethod</th>
-                      <th scope="col" width="5%">googlevoice</th>
-                      <th scope="col" width="5%">groups</th>
-                      <th scope="col" width="5%">datecreate</th>
-                      <th scope="col" width="5%">updater</th>
-                      <th scope="col" width="5%">proxy</th>
-                      <th scope="col" width="5%">proxylist</th>
-                      <th scope="col" width="5%">#</th>
+                    <tr id="column">
+
                     </tr>
                   </thead>
                   <tbody id="files"></tbody>
@@ -452,9 +433,41 @@
       $("#groups").on("change", function (e) {
         getDateByGroups();
       });
-
+      var showTable = []
       getGroups()
+      function createTable() {
+        var json = httpGetJson("getcolumnshow", "Bearer " + window.localStorage.token)
+        showTable = json.data;
+        // <th scope="col" width="2%">#</th>
+        //               <th scope="col" width="5%">email</th>
+        //               <th scope="col" width="5%">password</th>
+        //               <th scope="col" width="5%">emailrecovery</th>
+        //               <th scope="col" width="5%">status</th>
+        //               <th scope="col" width="5%">youtube</th>
+        //               <th scope="col" width="5%">birthday</th>
+        //               <th scope="col" width="5%">phonerecovery</th>
+        //               <th scope="col" width="5%">country</th>
+        //               <th scope="col" width="5%">googleadw</th>
+        //               <th scope="col" width="5%">googleadsense</th>
+        //               <th scope="col" width="5%">chplay</th>
+        //               <th scope="col" width="5%">paymentmethod</th>
+        //               <th scope="col" width="5%">googlevoice</th>
+        //               <th scope="col" width="5%">groups</th>
+        //               <th scope="col" width="5%">datecreate</th>
+        //               <th scope="col" width="5%">updater</th>
+        //               <th scope="col" width="5%">proxy</th>
+        //               <th scope="col" width="5%">proxylist</th>
+        //               <th scope="col" width="5%">#</th>
+        var render = `<th scope="col" width="1%">#</th>`;
 
+        for (let i = 1; i < showTable.length; i++) {
+          render = render + `<th scope="col" width="5%">${showTable[i]}</th>`
+          // console.log(render)
+        }
+        render = render + `<th scope="col" width="5%">#</th>`
+        setHtmlCssSelector('#column', render)
+      }
+      createTable()
 
       function getGroups() {
         $.ajax({
@@ -667,8 +680,13 @@
               if (Contains(onePost.status, "Verify") == true || Contains(onePost.status, "Disable") == true) {
                 verify = verify + 1;
               }
-              stringToRender +=
-                `<tr id="${onePost.id}"><td>${i + 1}</td><td><input type="text" style="width:100%;" value="${onePost.email}"></td><td><input type="text" style="width:100%;" value="${onePost.password}"></td><td><input type="text" style="width:100%;" value="${onePost.emailrecovery}"></td><td><input type="text" style="width:100%;" value="${onePost.status}"></td><td><input type="text" style="width:100%;" value="${onePost.youtube}"></td><td><input type="text" value="${onePost.birthday}"></td><td><input type="text" style="width:100%;" value="${onePost.phonerecovery}"></td><td><input type="text" style="width:100%;" value="${onePost.country}"></td><td><input type="text" style="width:100%;" value="${onePost.googleadw}"></td><td><input type="text" style="width:100%;" value="${onePost.googleadsense}"></td><td ><input type="text" style="width:100%;" value="${onePost.chplay}"></td><td><input type="text" style="width:100%;" value="${onePost.paymentmethod}"></td><td><input type="text" style="width:100%;" value="${onePost.googlevoice}"></td><td><input type="text" style="width:100%;" value="${onePost.groups}"></td><td><input type="text" style="width:100%;" value="${onePost.datecreate}"></td><td><input type="text" style="width:100%;" value="${onePost.updater}"></td><td><input type="text" style="width:100%;" value="${onePost.proxy}"></td><td><input type="text" style="width:100%;" value="${onePost.proxylist}"></td><td><a nohref style='cursor:pointer;color:blue;text-decoration:underline' onClick='Del("${onePost.id}");'>Xóa</a> | <a nohref style='cursor:pointer;color:blue;text-decoration:underline' onClick='Update("${onePost.id}");'>Update</a></td>`;
+              // console.log(onePost["id"])
+              var tr = `<tr id="${onePost.id}"><td>${x}</td>`
+              for (let z = 1; z < showTable.length; z++) {
+                tr = tr + `<td><input type="text" style="width:100%;" value="${onePost[showTable[z]]}"></td>`
+              }
+              tr = tr + `<td><a nohref style='cursor:pointer;color:blue;text-decoration:underline' onClick='Del("${onePost.id}");'>Xóa</a> | <a nohref style='cursor:pointer;color:blue;text-decoration:underline' onClick='Update("${onePost.id}");'>Update</a></td></tr>`
+              stringToRender = stringToRender + tr
             }
             let tileveri = Math.ceil(verify / x * 100)
             let tilelive = 100 - tileveri
@@ -677,10 +695,10 @@
             $("#countmail").html("" + count + "");
             $("#liveverify").html("<span>&#9758;	</span>Verify: " + verify + " (" + tileveri + "%) <span>&#10159;</span> Live: " + (x - verify) + " (" + tilelive + "%)");
             $('input[value="undefined"]').val("");
-            $('tr > *:nth-child(7)').hide();
-            // $('tr > *:nth-child(8)').hide();
-            $('tr > *:nth-child(18)').hide();
-            $('tr > *:nth-child(19)').hide();
+            // $('tr > *:nth-child(7)').hide();
+
+            // $('tr > *:nth-child(18)').hide();
+            // $('tr > *:nth-child(19)').hide();
           }
         });
       }
@@ -738,8 +756,13 @@
               if (Contains(onePost.status, "Verify") == true || Contains(onePost.status, "Disable") == true) {
                 verify = verify + 1;
               }
-              stringToRender +=
-                `<tr id="${onePost.id}"><td>${i + 1}</td><td><input type="text" style="width:100%;" value="${onePost.email}"></td><td><input type="text" style="width:100%;" value="${onePost.password}"></td><td><input type="text" style="width:100%;" value="${onePost.emailrecovery}"></td><td><input type="text" style="width:100%;" value="${onePost.status}"></td><td><input type="text" style="width:100%;" value="${onePost.youtube}"></td><td><input type="text" value="${onePost.birthday}"></td><td><input type="text" style="width:100%;" value="${onePost.phonerecovery}"></td><td><input type="text" style="width:100%;" value="${onePost.country}"></td><td><input type="text" style="width:100%;" value="${onePost.googleadw}"></td><td><input type="text" style="width:100%;" value="${onePost.googleadsense}"></td><td ><input type="text" style="width:100%;" value="${onePost.chplay}"></td><td><input type="text" style="width:100%;" value="${onePost.paymentmethod}"></td><td><input type="text" style="width:100%;" value="${onePost.googlevoice}"></td><td><input type="text" style="width:100%;" value="${onePost.groups}"></td><td><input type="text" style="width:100%;" value="${onePost.datecreate}"></td><td><input type="text" style="width:100%;" value="${onePost.updater}"></td><td><input type="text" style="width:100%;" value="${onePost.proxy}"></td><td><input type="text" style="width:100%;" value="${onePost.proxylist}"></td><td><a nohref style='cursor:pointer;color:blue;text-decoration:underline' onClick='Del("${onePost.id}");'>Xóa</a> | <a nohref style='cursor:pointer;color:blue;text-decoration:underline' onClick='Update("${onePost.id}");'>Update</a></td>`;
+              // console.log(onePost["id"])
+              var tr = `<tr id="${onePost.id}"><td>${x}</td>`
+              for (let z = 1; z < showTable.length; z++) {
+                tr = tr + `<td><input type="text" style="width:100%;" value="${onePost[showTable[z]]}"></td>`
+              }
+              tr = tr + `<td><a nohref style='cursor:pointer;color:blue;text-decoration:underline' onClick='Del("${onePost.id}");'>Xóa</a> | <a nohref style='cursor:pointer;color:blue;text-decoration:underline' onClick='Update("${onePost.id}");'>Update</a></td></tr>`
+              stringToRender = stringToRender + tr
             }
             let tileveri = Math.ceil(verify / x * 100)
             let tilelive = 100 - tileveri
@@ -748,10 +771,10 @@
             $("#countmail").html("" + count + "");
             $("#liveverify").html("<span>&#9758;	</span>Verify: " + verify + " (" + tileveri + "%) <span>&#10159;</span> Live: " + (x - verify) + " (" + tilelive + "%)");
             $('input[value="undefined"]').val("");
-            $('tr > *:nth-child(7)').hide();
+            // $('tr > *:nth-child(7)').hide();
             // $('tr > *:nth-child(8)').hide();
-            $('tr > *:nth-child(18)').hide();
-            $('tr > *:nth-child(19)').hide();
+            // $('tr > *:nth-child(18)').hide();
+            // $('tr > *:nth-child(19)').hide();
 
           }
         });
