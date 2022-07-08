@@ -201,10 +201,12 @@
                       placeholder="Nhập các trạng thái cần chạy lại, mỗi trạng thái 1 dòng. Ví dụ: Loading..."></textarea>
                   </div>
 
-                  <label><b>Ẩn cột</b></label>
+                  <label><b>Ẩn cột mail</b></label>
                   <input class="form-control" id="ancot"
                     placeholder="Nhập các cột cần ẩn, các nhau bởi dấu phẩy. ví dụ: proxy,proxylist"></input>
-
+                  <label><b>Ẩn cột thiết bị</b></label>
+                  <input class="form-control" id="ancotthietbi"
+                    placeholder="Nhập các cột cần ẩn, các nhau bởi dấu phẩy. ví dụ: firstmail,namemail"></input>
                   <button type="button" ripple="ripple" ripple-color="#fff" class="btn btn-primary btn-lg"
                     id="btnSave">Lưu lại</button>
                   <br>
@@ -242,7 +244,8 @@
         e.preventDefault();
         var data = {
           chaylai: $('#chaylai').val(),
-          ancot: $('#ancot').val()
+          ancot: $('#ancot').val(),
+          ancotthietbi: $('#ancotthietbi').val(),
         }
         $.ajax({
           url: "luucaidat",
@@ -270,9 +273,11 @@
         if (json.mess == "success") {
           $('#chaylai').val(json.chaylai)
           $('#ancot').val(json.ancot)
+          $('#ancotthietbi').val(json.ancotthietbi)
         } else {
           $('#chaylai').val("Lấy dữ liệu cũ bị lỗi")
           $('#ancot').val("Lấy dữ liệu cũ bị lỗi")
+          $('#ancotthietbi').val("Lấy dữ liệu cũ bị lỗi")
         }
 
         // console.log(data)

@@ -438,31 +438,10 @@
       function createTable() {
         var json = httpGetJson("getcolumnshow", "Bearer " + window.localStorage.token)
         showTable = json.data;
-        // <th scope="col" width="2%">#</th>
-        //               <th scope="col" width="5%">email</th>
-        //               <th scope="col" width="5%">password</th>
-        //               <th scope="col" width="5%">emailrecovery</th>
-        //               <th scope="col" width="5%">status</th>
-        //               <th scope="col" width="5%">youtube</th>
-        //               <th scope="col" width="5%">birthday</th>
-        //               <th scope="col" width="5%">phonerecovery</th>
-        //               <th scope="col" width="5%">country</th>
-        //               <th scope="col" width="5%">googleadw</th>
-        //               <th scope="col" width="5%">googleadsense</th>
-        //               <th scope="col" width="5%">chplay</th>
-        //               <th scope="col" width="5%">paymentmethod</th>
-        //               <th scope="col" width="5%">googlevoice</th>
-        //               <th scope="col" width="5%">groups</th>
-        //               <th scope="col" width="5%">datecreate</th>
-        //               <th scope="col" width="5%">updater</th>
-        //               <th scope="col" width="5%">proxy</th>
-        //               <th scope="col" width="5%">proxylist</th>
-        //               <th scope="col" width="5%">#</th>
         var render = `<th scope="col" width="1%">#</th>`;
 
         for (let i = 1; i < showTable.length; i++) {
           render = render + `<th scope="col" width="5%">${showTable[i]}</th>`
-          // console.log(render)
         }
         render = render + `<th scope="col" width="5%">#</th>`
         setHtmlCssSelector('#column', render)
@@ -920,23 +899,11 @@
           data: JSON.stringify(data),
           contentType: 'application/json',
           success: function (result) {
-
-            // const obj = JSON.parse(result);
             var msg = result.mess;
-
             if (msg == "success") {
-              // $('#status').html(msg)
               toastr.success("Cập nhật thành công");
-              // window.location.href = "/keymanager.html";
-              // var date = new Date("Februari 10, 2020");
-              // var dateString = date.toGMTString();
-              // var cookieString = result.split('|')[1] + dateString;
-
-              //location.reload();
             } else {
-              // $('#status').html(msg)
               toastr.error(msg);
-              // $("#status").html(result);
             }
           }
         });

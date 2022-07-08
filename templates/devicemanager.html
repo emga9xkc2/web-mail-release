@@ -219,14 +219,7 @@
                 <div class="yoo-height-b20 yoo-height-lg-b20"></div>
                 <table class="table table-bordered">
                   <thead>
-                    <tr>
-                      <th scope="col" width="2%">#</th>
-                      <th scope="col" width="10%">device</th>
-                      <th scope="col" width="15%">proxy</th>
-                      <th scope="col" width="15%">firstmail</th>
-                      <th scope="col" width="15%">namemail</th>
-                      <th scope="col" width="10%">time</th>
-                      <th scope="col" width="15%">#</th>
+                    <tr id="column">
                     </tr>
                   </thead>
                   <tbody id="files"></tbody>
@@ -244,22 +237,7 @@
       <!-- .yoo-card -->
       <div class="yoo-height-b30 yoo-height-lg-b30"></div>
 
-      <div id="id01" class="modal">
-        <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">×</span>
-        <form class="modal-content" action="/action_page.php">
-          <div class="container">
-            <h1>Delete Account</h1>
-            <p>Are you sure you want to delete your account?</p>
 
-            <div class="clearfix">
-              <button type="button" onclick="document.getElementById('id01').style.display='none'"
-                class="cancelbtn">Cancel</button>
-              <button type="button" onclick="document.getElementById('id01').style.display='none'"
-                class="deletebtn">Delete</button>
-            </div>
-          </div>
-        </form>
-      </div>
       {% include 'include/footer.html' %}
       <!-- .yoo-card -->
 
@@ -294,14 +272,14 @@
       var search = window.location.search;
       var pages = Regex(search, /page=(\d+)/)
       if (pages != null && pages.length > 1) {
-        GetFile(pages[1])
+        loadDevice(pages[1])
       } else {
-        GetFile("1")
+        loadDevice("1")
       }
       function Search() {
         var search = $("#ipn_search").val()
         if (search == "") {
-          GetFile("1")
+          loadDevice("1")
           return
         }
         $.ajax({
@@ -356,7 +334,7 @@
           }
         });
       }
-      function GetFile(page) {
+      function loadDevice(page) {
         $.ajax({
           url: "/loaddevice/" + page,
           type: "get",
@@ -392,22 +370,39 @@
             }
             paginations = paginations + `</ul>`
 
+
+            let x = 0;
             for (let i = 0; i < result.length; i++) {
+              x = x + 1
               const onePost = result[i];
-              //  console.log(onePost)
-              stringToRender +=
-                `<tr id="${onePost.id}"><td>${i + 1}</td><td style="width:10%;"><input type="text" style="width:100%;" value="${onePost.device}"></td><td style="width:10%;"><input onkeypress='UpdateEnter(event, "${onePost.id}");' type="text" style="width:100%;" value="${onePost.proxy}"></td><td><input type="text" style="width:100%;" value="${onePost.firstmail}"></td><td><input type="text" style="width:100%;" value="${onePost.namemail}"></td><td><input type="text" value="${onePost.time}"></td><td><a nohref style='cursor:pointer;color:blue;text-decoration:underline' onClick='Del("${onePost.id}");'>Xóa</a> | <a nohref style='cursor:pointer;color:blue;text-decoration:underline' onClick='Update("${onePost.id}");'>Update</a></td>`;
+
+              // console.log(onePost["id"])
+              var tr = `<tr id="${onePost.id}"><td>${x}</td>`
+              for (let z = 1; z < showTable.length; z++) {
+                var tencot = showTable[z]
+                tr = tr + `<td><input id="${tencot}_${onePost.id}" onkeypress='UpdateEnter(event, "${onePost.id}", "${tencot}");' type="text" style="width:100%;" value="${onePost[showTable[z]]}"></td>`
+              }
+              tr = tr + `<td><a nohref style='cursor:pointer;color:blue;text-decoration:underline' onClick='Del("${onePost.id}");'>Xóa</a></td></tr>`
+              stringToRender = stringToRender + tr
             }
 
             $("#files").html(stringToRender);
             $("#page").html(paginations);
-            $("#countmail").html("<b>(" + count + ")</b>");
+            $("#countmail").html("" + count + "");
             $('input[value="undefined"]').val("");
 
-          },
-          error: function (results) {
-            window.location.href = "login.html"
-            return
+            // for (let i = 0; i < result.length; i++) {
+            //   const onePost = result[i];
+            //   //  console.log(onePost)
+            //   stringToRender +=
+            //     `<tr id="${onePost.id}"><td>${i + 1}</td><td style="width:10%;"><input type="text" style="width:100%;" value="${onePost.device}"></td><td style="width:10%;"><input onkeypress='UpdateEnter(event, "${onePost.id}");' type="text" style="width:100%;" value="${onePost.proxy}"></td><td><input type="text" style="width:100%;" value="${onePost.firstmail}"></td><td><input type="text" style="width:100%;" value="${onePost.namemail}"></td><td><input type="text" value="${onePost.time}"></td><td><a nohref style='cursor:pointer;color:blue;text-decoration:underline' onClick='Del("${onePost.id}");'>Xóa</a></td>`;
+            // }
+
+            // $("#files").html(stringToRender);
+            // $("#page").html(paginations);
+            // $("#countmail").html("<b>(" + count + ")</b>");
+            // $('input[value="undefined"]').val("");
+
           }
         });
       }
@@ -436,24 +431,35 @@
           }
         });
       }
-      function UpdateEnter(e, id) {
+      function createTable() {
+        var json = httpGetJson("getcolumndeviceshow", "Bearer " + window.localStorage.token)
+        showTable = json.data;
+        var render = `<th scope="col" width="1%">#</th>`;
+
+        for (let i = 1; i < showTable.length; i++) {
+          render = render + `<th scope="col" width="5%">${showTable[i]}</th>`
+        }
+        render = render + `<th scope="col" width="5%">#</th>`
+        setHtmlCssSelector('#column', render)
+      }
+      createTable()
+      function UpdateEnter(e, id, column) {
         if (e.keyCode == 13) {
-          Update(id)
+          Update(id, column)
           return
         }
       }
-      function Update(id) {
-        var r = confirm("Xác nhận cập nhật!");
+
+      function Update(id, column) {
+        var r = confirm("Xác nhận update! " + column);
         if (r !== true) {
           return
         }
-        var select = document.querySelectorAll('tr[id="' + id + '"] > td')
-
-        var person = {
-          device: select[1].childNodes[0].value,
-          proxy: select[2].childNodes[0].value,
-          firstmail: select[3].childNodes[0].value,
-          namemail: select[4].childNodes[0].value,
+        var idInput = column + "_" + id
+        var querySelector = document.querySelector('#' + idInput)
+        var value = querySelector.value;
+        var data = {
+          [column]: value,
         }
         $.ajax({
           url: "/deviceedit/" + id,
@@ -462,30 +468,19 @@
           beforeSend: function (request) {
             request.setRequestHeader("Authorization", "Bearer " + window.localStorage.token);
           },
-          data: JSON.stringify(person),
+          data: JSON.stringify(data),
           contentType: 'application/json',
           success: function (result) {
-
-            // const obj = JSON.parse(result);
             var msg = result.mess;
-
             if (msg == "success") {
-              // $('#status').html(msg)
               toastr.success("Cập nhật thành công");
-              // window.location.href = "/keymanager.html";
-              // var date = new Date("Februari 10, 2020");
-              // var dateString = date.toGMTString();
-              // var cookieString = result.split('|')[1] + dateString;
-
-              //location.reload();
             } else {
-              // $('#status').html(msg)
               toastr.error(msg);
-              // $("#status").html(result);
             }
           }
         });
       }
+
 
     </script>
     <!-- Required Scripts -->
