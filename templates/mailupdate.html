@@ -56,6 +56,9 @@
                       placeholder="Nhập mỗi email 1 dòng. Định dạng: email|..."></textarea>
                   </div>
                   <input type="text" id="trangthaimail" class="form-control" placeholder="Nhập status email">
+                  <br>
+                  <input type="text" id="lomail" class="form-control"
+                    placeholder="Nhập tên lô mail mới (Bỏ trống nếu không cần)">
                   <br><button type="button" ripple="ripple" ripple-color="#fff" class="btn btn-primary btn-lg"
                     onclick="update(event)">Cập nhật</button>
                   <br>
@@ -108,6 +111,7 @@
         var person = {
           listmail: $('#input').val(),
           status: $('#trangthaimail').val(),
+          lomail: $('#lomail').val(),
         }
         $.ajax({
           url: "mailupdate",
