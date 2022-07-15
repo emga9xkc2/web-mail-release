@@ -204,9 +204,14 @@
                   <label><b>Ẩn cột mail</b></label>
                   <input class="form-control" id="ancot"
                     placeholder="Nhập các cột cần ẩn, các nhau bởi dấu phẩy. ví dụ: proxy,proxylist"></input>
-                  <label><b>Ẩn cột thiết bị</b></label>
+                  <br><label><b>Ẩn cột thiết bị</b></label>
                   <input class="form-control" id="ancotthietbi"
                     placeholder="Nhập các cột cần ẩn, các nhau bởi dấu phẩy. ví dụ: firstmail,namemail"></input>
+                  <br><label><b>Phương pháp lấy mail</b></label>
+                  <select class="form-control" id="phuongphaplaymail">
+                    <option selected="selected">Lấy mail từ cũ đến mới</option>
+                    <option>Lấy mail từ mới đến cũ</option>
+                  </select>
                   <button type="button" ripple="ripple" ripple-color="#fff" class="btn btn-primary btn-lg"
                     id="btnSave">Lưu lại</button>
                   <br>
@@ -246,6 +251,7 @@
           chaylai: $('#chaylai').val(),
           ancot: $('#ancot').val(),
           ancotthietbi: $('#ancotthietbi').val(),
+          phuongphaplaymail: $('#phuongphaplaymail').val(),
         }
         $.ajax({
           url: "luucaidat",
@@ -274,10 +280,14 @@
           $('#chaylai').val(json.chaylai)
           $('#ancot').val(json.ancot)
           $('#ancotthietbi').val(json.ancotthietbi)
+          if (json.phuongphaplaymail != "") {
+            $('#phuongphaplaymail').val(json.phuongphaplaymail)
+          }
         } else {
           $('#chaylai').val("Lấy dữ liệu cũ bị lỗi")
           $('#ancot').val("Lấy dữ liệu cũ bị lỗi")
           $('#ancotthietbi').val("Lấy dữ liệu cũ bị lỗi")
+          $('#phuongphaplaymail').val("Lấy dữ liệu cũ bị lỗi")
         }
 
         // console.log(data)
