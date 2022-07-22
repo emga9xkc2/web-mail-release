@@ -477,6 +477,23 @@
           }
         });
       }
+      getLastMailSearch()
+      function getLastMailSearch() {
+        $.ajax({
+          url: "/lastmailsearch",
+          type: "get",
+          beforeSend: function (request) {
+            request.setRequestHeader("Authorization", "Bearer " + window.localStorage.token);
+          },
+          dataType: "text",
+          success: function (result) {
+            var resultJson = JSON.parse(result);
+            var result = resultJson.result
+            $("#ipn_search").val(result);
+
+          }
+        });
+      }
 
       function getInfoByDateGroups() {
         var groups = $("#groups").val()
