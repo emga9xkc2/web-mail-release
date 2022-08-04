@@ -8,3 +8,4 @@ pyjwt
 Jinja2
 timestring
 wmi
+redis
