@@ -377,10 +377,44 @@
               const onePost = result[i];
 
               // console.log(onePost["id"])
+              var checktime = false;
               var tr = `<tr id="${onePost.id}"><td>${x}</td>`
+              var style = "";
               for (let z = 1; z < showTable.length; z++) {
                 var tencot = showTable[z]
-                tr = tr + `<td><input id="${tencot}_${onePost.id}" onkeypress='UpdateEnter(event, "${onePost.id}", "${tencot}");' type="text" style="width:100%;" value="${onePost[showTable[z]]}"></td>`
+                var value = onePost[showTable[z]]
+                if (value.includes("/") && !checktime) {
+
+
+                  // Tách ngày, tháng, năm, giờ, phút từ chuỗi thời gian ban đầu
+                  var parts = value.split(/[\/ :]/);
+
+                  // Tạo đối tượng Date từ các phần đã tách
+                  var specifiedTime = new Date(parts[2], parts[1] - 1, parts[0], parts[3], parts[4]);
+
+                  // Format lại chuỗi theo ISO 8601: 'yyyy-mm-ddTHH:MM:ss'
+                  var isoFormattedTime = specifiedTime.toISOString();
+                  var currentTime = new Date();
+
+                  // Thời gian cần kiểm tra (23/07/2022 01:38)
+                  var specifiedTime = new Date(isoFormattedTime);
+
+                  // Tính khoảng thời gian giữa hai thời điểm
+                  var difference = currentTime - specifiedTime;
+
+                  // Chuyển đổi khoảng thời gian từ milliseconds sang phút
+                  var differenceInMinutes = difference / (1000 * 60);
+
+                  // Kiểm tra nếu thời gian đã vượt quá 5 phút
+                  if (differenceInMinutes > 5) {
+                    style = "color: red;"
+                    console.log("Đã quá 5 phút so với thời gian đã chỉ định " + value);
+                  }
+                  checktime = true;
+                }
+                // console.log(value);
+                tr = tr + `<td><input id="${tencot}_${onePost.id}" onkeypress='UpdateEnter(event, "${onePost.id}", "${tencot}");' type="text" style="width:100%;${style}" value="${value}"></td>`
+                style = ""
               }
               tr = tr + `<td><a nohref style='cursor:pointer;color:blue;text-decoration:underline' onClick='Del("${onePost.id}");'>Xóa</a></td></tr>`
               stringToRender = stringToRender + tr

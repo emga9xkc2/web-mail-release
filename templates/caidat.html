@@ -2,6 +2,7 @@
 <html class="no-js" lang="en">
 
 {% include 'include/header.html' %}
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <style>
   body {
     font-family: Arial, Helvetica, sans-serif;
@@ -200,7 +201,18 @@
                     <textarea class="form-control" style="max-height: none;" id="chaylai" rows="6"
                       placeholder="Nhập các trạng thái cần chạy lại, mỗi trạng thái 1 dòng. Ví dụ: Loading..."></textarea>
                   </div>
-
+                  <label><b>Đuôi email</b></label>
+                  <div class="form-group level-up">
+                    <textarea class="form-control" style="max-height: none;" id="duoiemail" rows="6"
+                      placeholder="Nhập các email cần đăng ký. ví dụ: @gmail.com"></textarea>
+                  </div>
+                  <br>
+                  <label><b>Số account tạo / lượt</b></label>
+                  <input class="form-control" id="soaccounttao" placeholder=""></input>
+                  <br>
+                  <label><b>Web ưu tiên mua email trước</b></label>
+                  <input class="form-control" id="webuutienmuaemail" placeholder=""></input>
+                  <br>
                   <label><b>Ẩn cột mail</b></label>
                   <input class="form-control" id="ancot"
                     placeholder="Nhập các cột cần ẩn, các nhau bởi dấu phẩy. ví dụ: proxy,proxylist"></input>
@@ -227,11 +239,62 @@
         </div>
 
       </div>
+    </div>
+    <br>
+
+
+    <div class="container-fluid">
+      <div class="yoo-uikits-heading">
+        <h2 class="yoo-uikits-title">Cài đặt ios</h2>
+      </div>
+    </div>
+    <div class="yoo-height-b30 yoo-height-lg-b30"></div>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="yoo-card yoo-style1">
+
+            <div class="yoo-card-body">
+              <div class="yoo-padd-lr-20">
+                <div class="yoo-height-b20 yoo-height-lg-b20"></div>
+                <form>
+                  <p><b>Chọn các chức năng cần chạy</b></p>
+
+                  <div class="w3-half">
+                    <input id="doiemailkhoiphuc" class="w3-check" type="checkbox">
+                    <label>Đổi email khôi phục</label>
+                    <br>
+                    <input id="doimatkhau" class="w3-check" type="checkbox">
+                    <label>Đổi mật khẩu</label>
+                    <br>
+                    <input id="dangxuatthietbi" class="w3-check" type="checkbox">
+                    <label>Đăng xuất thiết bị</label>
+                    <br>
+                    <input id="kiemtrangaytaomail" class="w3-check" type="checkbox">
+                    <label>Kiểm tra ngày tạo mail</label>
+                    <br>
+
+                  </div>
+                  <button type="button" ripple="ripple" ripple-color="#fff" class="btn btn-primary btn-lg"
+                    id="btnSave">Lưu
+                    lại</button>
+                  <br>
+                  <br>
+                </form>
+                <div class="yoo-height-b5 yoo-height-lg-b5"></div>
+              </div>
+            </div>
+
+
+
+          </div>
+        </div>
+
+      </div>
       <br>
 
       <!-- .yoo-card -->
       <div class="yoo-height-b30 yoo-height-lg-b30"></div>
-
 
       {% include 'include/footer.html' %}
       <!-- .yoo-card -->
@@ -249,6 +312,9 @@
         e.preventDefault();
         var data = {
           chaylai: $('#chaylai').val(),
+          duoiemail: $('#duoiemail').val(),
+          soaccounttao: $('#soaccounttao').val(),
+          webuutienmuaemail: $('#webuutienmuaemail').val(),
           ancot: $('#ancot').val(),
           ancotthietbi: $('#ancotthietbi').val(),
           phuongphaplaymail: $('#phuongphaplaymail').val(),
@@ -279,6 +345,9 @@
         if (json.mess == "success") {
           $('#chaylai').val(json.chaylai)
           $('#ancot').val(json.ancot)
+          $('#duoiemail').val(json.duoiemail)
+          $('#soaccounttao').val(json.soaccounttao)
+          $('#webuutienmuaemail').val(json.webuutienmuaemail)
           $('#ancotthietbi').val(json.ancotthietbi)
           if (json.phuongphaplaymail != "") {
             $('#phuongphaplaymail').val(json.phuongphaplaymail)
